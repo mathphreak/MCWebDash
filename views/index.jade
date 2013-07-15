@@ -1,0 +1,61 @@
+!!! 5
+html(lang="en")
+    head
+        title mathphreak's Minecraft Server
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        link(rel="stylesheet", href="/stylesheets/bootstrap.min.css")
+        link(rel="stylesheet", href="/stylesheets/style.css")
+        link(rel="stylesheet", href="/stylesheets/bootstrap-responsive.min.css")
+        script(src="/socket.io/socket.io.v0.9.16.js")
+    body
+        .navbar.navbar-inverse.navbar-fixed-top
+            .navbar-inner
+                .container
+                    button.btn.btn-navbar(type="button",data-toggle="collapse",data-target=".nav-collapse")
+                        span.icon-bar
+                        span.icon-bar
+                        span.icon-bar
+                    a.brand(href="#") mathphreak's Minecraft Server
+                    div.nav-collapse.collapse
+                        ul.nav
+                            li.active: a(href="#") Home
+                            li: a(href="#nyi",role="button",data-toggle="modal") About
+                            li: a(href="#nyi",role="button",data-toggle="modal") Contact
+                        form.navbar-form.pull-right
+                            input.span2(type="text",placeholder="Passphrase")
+                            a.btn(href="#nyi",role="button",data-toggle="modal") go
+        .container
+            .hero-unit
+                h1.text-center The server is 
+                    if enabled
+                        span#enabled-status.text-success ENABLED
+                    else
+                        span#enabled-status.text-error DISABLED
+                h1.text-center#population-details and there are 
+                    span#population= population
+                    /
+                    span#capacity= capacity
+                    span  people online
+            .row
+                .span4
+                    h2 Spawn
+                    p.
+                        Spawn is an integral part of the server community.
+                        With player-created shops as well as villager-based shops, spawn is a place you'll never want to leave.
+                        Because it's awesome.
+                .span4
+                    h2 Teleportation
+                    p.
+                        We allow players to teleport to VoxelMap waypoints.  Because we're awesome.
+                .span4
+                    h2 Awesomeness
+                    p.
+                        Our players are awesome.
+        #nyi.modal.hide
+            .modal-header
+                button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
+                h3 Not Yet Implemented
+            .modal-body This feature has not yet been implemented, sorry!
+        script(src="/javascripts/app.js")
+        script(src="http://code.jquery.com/jquery.js")
+        script(src="/javascripts/bootstrap.min.js")
