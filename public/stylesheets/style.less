@@ -3,6 +3,10 @@ body {
     padding-bottom: 40px;
 }
 
-#enabled-status.text-error + #population-details {
+h1 + #population-details {
     display: none;
+}
+
+h1[data-enabled] + #population-details {
+    display: block;
 }

@@ -19,14 +19,14 @@ html(lang="en")
                     div.nav-collapse.collapse
                         ul.nav
                             li.active: a(href="#") Home
-                            li: a(href="#nyi",role="button",data-toggle="modal") About
-                            li: a(href="#nyi",role="button",data-toggle="modal") Contact
-                        form.navbar-form.pull-right
+                            li: a(href="#about",role="button",data-toggle="modal") About
+                            li: a(href="#showhash",role="button",data-toggle="modal") Current Hash
+                        form.navbar-form.pull-right#passphrase-form
                             input.span2(type="text",placeholder="Passphrase")
-                            a.btn(href="#nyi",role="button",data-toggle="modal") go
+                            input.btn.btn-primary(type="submit",value='go',data-loading-text="checking...") go
         .container
             .hero-unit
-                h1.text-center The server is 
+                h1.text-center(data-enabled=enabled) The server is 
                     if enabled
                         span#enabled-status.text-success ENABLED
                     else
@@ -56,6 +56,20 @@ html(lang="en")
                 button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
                 h3 Not Yet Implemented
             .modal-body This feature has not yet been implemented, sorry!
-        script(src="/javascripts/app.js")
+        #about.modal.hide
+            .modal-header
+                button.close(type="button",data-dismiss="modal",aria-hidden="true") &times;
+                h3 About the Server
+            .modal-body.
+                mathphreak ran a vanilla server for his friends last summer, and got into FTB a few months ago.
+                He decided to go ahead and run an FTB server this time around.
+        #showhash.modal.hide
+            .modal-header
+                button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
+                h3 Your Current Hash
+            .modal-body There isn't one!
         script(src="http://code.jquery.com/jquery.js")
         script(src="/javascripts/bootstrap.min.js")
+        script(src="/javascripts/underscore-min.js")
+        script(src="/javascripts/backbone-min.js")
+        script(src="/javascripts/app.js")

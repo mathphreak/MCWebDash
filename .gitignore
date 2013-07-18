@@ -16,3 +16,5 @@ node_modules
 *.sublime-*
 
 npm-debug.log
+
+secrets.coffee
