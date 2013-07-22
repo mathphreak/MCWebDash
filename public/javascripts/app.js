@@ -1,5 +1,9 @@
 var Passphrase, socket;
 
+$.fn.refresh = function() {
+  return this.toggle().removeAttr("style");
+};
+
 socket = io.connect('');
 
 socket.on('server status changed', function(isUp) {
@@ -11,19 +15,39 @@ socket.on('server status changed', function(isUp) {
   enabledStatus.removeClass(oldClass);
   enabledStatus.addClass(newClass);
   enabledStatus.text(newText.toUpperCase());
-  if (isUp) {
-    return enabledStatus.parent().attr("data-enabled", true);
+  if (!isUp) {
+    return enabledStatus.parent().parent().attr("data-disabled", true);
   } else {
-    return enabledStatus.parent().removeAttr("data-enabled");
+    return enabledStatus.parent().parent().removeAttr("data-disabled");
   }
 });
 
 socket.on('capacity', function(capacity) {
-  return document.querySelector('#capacity').innerHTML = "" + capacity;
+  return $('[data-capacity]').attr("data-capacity", capacity).refresh();
 });
 
 socket.on('population', function(population) {
-  return document.querySelector("#population").innerHTML = "" + population;
+  return $("[data-population]").attr("data-population", population).refresh();
+});
+
+socket.on('time', function(time) {
+  var isDay, newClass, oldClass;
+  isDay = time.localeCompare("DAY") === 0;
+  newClass = isDay ? "text-success" : "text-warning";
+  oldClass = isDay ? "text-warning" : "text-success";
+  return $("#time-description").text(time).addClass(newClass).removeClass(oldClass);
+});
+
+socket.on('sleep', function(count) {
+  return $("[data-sleeping]").attr("data-sleeping", count).refresh();
+});
+
+socket.on('player list', function(list) {
+  var playerlist;
+  playerlist = $("#playerlist").html("");
+  return _.each(list, function(player) {
+    return playerlist.append("<li>" + player + "</li>");
+  });
 });
 
 Passphrase = Backbone.Model.extend({

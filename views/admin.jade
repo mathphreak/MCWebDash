@@ -1,0 +1,22 @@
+extends master
+
+block admin-navbar-element
+    li.active: a(href="/admin") Admin
+
+block main-content
+    h1#hashes Hashes
+    table.table
+        thead
+            tr
+                th ID
+                th Hash
+                th Actions
+        tbody
+            each phrase in passphrases
+                tr
+                    td= phrase._id
+                    td= phrase.phrase
+                    td
+                        a.btn.btn-primary(href="##{phrase._id}") 
+                            i.icon-edit
+                            span  Edit

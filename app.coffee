@@ -9,6 +9,7 @@ path = require('path')
 mongoose = require 'mongoose'
 secrets = require './secrets'
 Passphrase = require('./Passphrase')(null, mongoose)
+admzip = require("adm-zip")
 
 app = express()
 
@@ -38,7 +39,18 @@ if 'development' == app.get('env')
     app.use(express.errorHandler());
 
 app.get '/', (req, res) ->
-    res.render 'index', {enabled: ServerStatus.up, population: ServerStatus.population, capacity: ServerStatus.capacity}
+    res.render 'index', {status: ServerStatus}
+
+app.get '/about', (req, res) ->
+    res.render 'about'
+
+app.get '/admin', (req, res) ->
+    Passphrase.get req.session.hash, (doc) ->
+        if doc?.powers.admin
+            Passphrase.Passphrase.find {}, (err, docs) ->
+                res.render 'admin', {passphrases: docs}
+        else
+            res.send 401
 
 app.post '/attempt', (req, res) ->
     phrase = req.param 'phrase', ''
@@ -59,6 +71,23 @@ app.get '/hash', (req, res) ->
         res.send 200, hash
     else
         res.send 401
+
+app.get '/config.zip', (req, res) ->
+    reqETag = req.get("If-None-Match") || ""
+    console.log "Request ETag: #{ reqETag }"
+    resultZip = new admzip()
+    resultZip.addLocalFolder("config")
+    resultBuffer = resultZip.toBuffer()
+    resultETag = do ->
+        hash = require('crypto').createHash('md5')
+        hash.update(resultBuffer)
+        hash.digest 'base64'
+    if resultETag.localeCompare(reqETag) is 0
+        console.log 'ETags matched, how nice!'
+        res.send 304
+    res.set('Content-Type', 'application/zip')
+    res.set('ETag', resultETag)
+    res.send(200, resultBuffer)
 
 server.listen(app.get('port'), -> console.log('Express server listening on port ' + app.get('port')))
 

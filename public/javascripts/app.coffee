@@ -1,3 +1,5 @@
+$.fn.refresh = -> @toggle().removeAttr("style")
+
 socket = io.connect ''
 socket.on 'server status changed', (isUp) ->
     oldClass = if isUp then "text-error" else "text-success"
@@ -7,16 +9,29 @@ socket.on 'server status changed', (isUp) ->
     enabledStatus.removeClass(oldClass)
     enabledStatus.addClass(newClass)
     enabledStatus.text(newText.toUpperCase())
-    if isUp
-        enabledStatus.parent().attr("data-enabled", true)
+    if not isUp
+        enabledStatus.parent().parent().attr("data-disabled", true)
     else
-        enabledStatus.parent().removeAttr("data-enabled")
+        enabledStatus.parent().parent().removeAttr("data-disabled")
 
 socket.on 'capacity', (capacity) ->
-    document.querySelector('#capacity').innerHTML = "" + capacity
+    $('[data-capacity]').attr("data-capacity", capacity).refresh()
 
 socket.on 'population', (population) ->
-    document.querySelector("#population").innerHTML = "" + population
+    $("[data-population]").attr("data-population", population).refresh()
+
+socket.on 'time', (time) ->
+    isDay = time.localeCompare("DAY") is 0
+    newClass = if isDay then "text-success" else "text-warning"
+    oldClass = if isDay then "text-warning" else "text-success"
+    $("#time-description").text(time).addClass(newClass).removeClass(oldClass)
+
+socket.on 'sleep', (count) ->
+    $("[data-sleeping]").attr("data-sleeping", count).refresh()
+
+socket.on 'player list', (list) ->
+    playerlist = $("#playerlist").html("")
+    _.each list, (player) -> playerlist.append("<li>#{player}</li>")
 
 Passphrase = Backbone.Model.extend
     canRun: (commandString) -> yes

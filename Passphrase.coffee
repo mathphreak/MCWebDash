@@ -11,7 +11,7 @@ module.exports = (config, mongoose) ->
     Passphrase = mongoose.model "Passphrase", PassphraseSchema
     
     attempt = (phrase, callback) ->
-        shaSum = crypto.createHash 'sha512'
+        shaSum = crypto.createHash 'md5'
         shaSum.update phrase
         
         hash = shaSum.digest 'hex'
@@ -23,25 +23,34 @@ module.exports = (config, mongoose) ->
         Passphrase.findOne {phrase: hash}, (err, doc) -> callback(doc?, hash)
     
     create = (phrase, commands, player_arguments, admin = no) ->
-        shaSum = crypto.createHash 'sha512'
+        shaSum = crypto.createHash 'md5'
         shaSum.update phrase
+        hash = shaSum.digest 'hex'
         
-        console.log "Registering #{ phrase }..."
-        passphrase = new Passphrase
-            phrase: shaSum.digest 'hex'
-            powers:
-                admin: admin
-                commands: commands
-                player_arguments: player_arguments
-        passphrase.save (err) -> if err then console.log err else console.log "Registered #{ phrase }!"
-        console.log "Tried to register #{ phrase }"
+        Passphrase.findOne {phrase: hash}, (err, doc) ->
+            if doc?
+                console.log "Already found #{ phrase } in the database!"
+            else
+                console.log "Registering #{ phrase }..."
+                passphrase = new Passphrase
+                    phrase: hash
+                    powers:
+                        admin: admin
+                        commands: commands
+                        player_arguments: player_arguments
+                passphrase.save (err) -> if err then console.log err else console.log "Registered #{ phrase }!"
+                console.log "Tried to register #{ phrase }"
     
     initializeBasicData = ->
         create("AnotherPhrase", [], [], yes)
+    
+    get = (hash, callback) ->
+        Passphrase.findOne {phrase: hash}, (err, doc) -> callback doc
     
     return {
         attempt: attempt
         create: create
         Passphrase: Passphrase
         initializeBasicData: initializeBasicData
+        get: get
     }

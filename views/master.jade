@@ -1,0 +1,44 @@
+!!! 5
+mixin modal(id,title,body)
+    div.modal.hide(id=id)
+        .modal-header
+            button.close(type="button", data-dismiss="modal", aria-hidden="true") &times;
+            h3= title
+        .modal-body= body
+html(lang="en")
+    head
+        title mathphreak's FTB Server
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        link(rel="stylesheet", href="/stylesheets/style.css")
+        link(rel="stylesheet", href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.no-icons.min.css")
+        link(rel="stylesheet", href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css")
+        script(src="/socket.io/socket.io.v0.9.16.js")
+    body
+        .navbar.navbar-inverse.navbar-fixed-top
+            .navbar-inner
+                .container
+                    button.btn.btn-navbar(type="button",data-toggle="collapse",data-target=".nav-collapse")
+                        span.icon-bar
+                        span.icon-bar
+                        span.icon-bar
+                    a.brand(href="/") mathphreak's FTB Server
+                    div.nav-collapse.collapse
+                        ul.nav
+                            block home-navbar-element
+                                li: a(href="/") Home
+                            block about-navbar-element
+                                li: a(href="/about") About
+                            block admin-navbar-element
+                                li: a(href="#nyi", role="button", data-toggle="modal") Admin
+                        form.navbar-form.pull-right#passphrase-form
+                            input.span2(type="text",placeholder="Passphrase")
+                            a.btn.btn-primary(type="submit",value='go',data-loading-text="checking...",href="#nyi",role="button",data-toggle="modal") go
+        .container
+            block main-content
+        mixin modal("nyi", "Not Yet Implemented", "This feature has not yet been implemented, sorry!")
+        block extra-modals
+        script(src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js")
+        script(src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js")
+        script(src="/javascripts/underscore-min.js")
+        script(src="/javascripts/backbone-min.js")
+        script(src="/javascripts/app.js")

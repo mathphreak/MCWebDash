@@ -3,10 +3,23 @@ body {
     padding-bottom: 40px;
 }
 
-h1 + #population-details {
+.hero-unit[data-disabled] #population-text {
     display: none;
 }
 
-h1[data-enabled] + #population-details {
-    display: block;
+.hero-unit[data-disabled] + .row {
+    display: none;
+}
+
+#time-description.text-success + #sleep-data {
+    display: none;
+}
+
+#sleep-data::before {
+    display: inline;
+    content: attr(data-sleeping) "/" attr(data-population) " ";
+}
+
+#population-details::before {
+    content: attr(data-population) "/" attr(data-capacity);
 }

@@ -13,7 +13,10 @@
     "connect-coffee-script": "~0.1.6",
     "socket.io": "~0.9.16",
     "mongoose": "~3.6.14",
-    "connect": "~2.8.4"
+    "connect": "~2.8.4",
+    "adm-zip": "~0.4.3",
+    "underscore": "~1.5.1",
+    "q": "~0.9.6"
   },
   "repository": "http://github.com/mathphreak/MCWebDash"
 }
